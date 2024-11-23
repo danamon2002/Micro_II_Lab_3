@@ -5,6 +5,8 @@
 
 #define SAMPLES 256
 #define NYQUIST_FREQ 2400
+#define C_4 262 // C4 Note
+#define A_4 440 // A4 Note
 
 int usec_per_sample = (1.0 / NYQUIST_FREQ) * 1000000;  //Calculate usec per sample
 int micPin = A0;
@@ -54,8 +56,11 @@ double doFFT(){
 }
 
 void loop(){
-  double audioFrequency = doFFT();
-  Serial.print("Dominant Frequency (Hz) is ");
-  Serial.println(doFFT());
+  int audioFrequency = (int)doFFT();
+  if (fabs(audioFrequency - A_4) <= 0.02 * A_4){ //Check if A4 was played (+/- 2%)
+    Serial.println("A4 DETECTED!!");
+  } else if (fabs(audioFrequency - C_4) <= 0.02 * C_4){ //Check if AC was played (+/- 2%)
+    Serial.println("C4 DETECTED!!");
+  }
 }
 
